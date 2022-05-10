@@ -4,6 +4,8 @@
 (require 'lsp-mode)
 (require 'dap-mode)
 (require 'dash)
+(require 's)
+(require 'ht)
 
 (defcustom lsp-mos-executable-path (executable-find "mos")
   "Path to the mos executable"
@@ -23,7 +25,9 @@
   :activation-fn (lsp-activate-on "mos")
   :major-modes '(mos-mode)
   :priority -1
-  :server-id 'mos-ls))
+  :server-id 'mos-ls
+  :action-handlers (ht ("mos.runSingleTest" (mos-debug-test t))
+                       ("mos.debugSingleTest" (mos-debug-test nil)))))
 
 ;; TODO: possibility to download mos automatically if not found?
 
@@ -32,7 +36,8 @@
       (dap--put-if-absent :type "mos")
       (dap--put-if-absent :request "launch")
       (dap--put-if-absent :workspace (lsp-workspace-root))
-      (dap--put-if-absent :port 6503)))
+      (dap--put-if-absent :host "localhost")
+      (dap--put-if-absent :debugServer 6503)))
 
 (dap-register-debug-provider "mos" #'lsp-mos-populate-debug-args)
 
@@ -47,8 +52,15 @@
   (let ((default-directory (locate-dominating-file default-directory "mos.toml")))
     (compile (string-join (list lsp-mos-executable-path " test")))))
 
-
-;; TODO: run/debug single test at point? when we hover the name?
+(defun mos-debug-test (no-debug)
+  `(lambda (arguments)
+     (-let [(&hash "arguments" [test-name]) arguments]
+       (dap-debug (list :type "mos"
+                        :request "launch"
+                        :name (string-join (list "Test " test-name))
+                        :testRunner (list :testCaseName test-name)
+                        :noDebug ,no-debug)))))
+;; TODO: maybe some sort of support if we don't have lenses active?
 
 (provide 'lsp-mos)
 ;;; lsp-mos.el ends here

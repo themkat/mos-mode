@@ -7,3 +7,4 @@
 (depends-on "dap-mode")
 (depends-on "dash")
 (depends-on "f")
+(depends-on "s")
