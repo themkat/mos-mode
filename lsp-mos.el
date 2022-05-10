@@ -5,7 +5,7 @@
 (require 'dap-mode)
 (require 'dash)
 
-(defcustom lsp-mos-executable-path "setme"
+(defcustom lsp-mos-executable-path (executable-find "mos")
   "Path to the mos executable"
   :group 'lsp-mos
   :type 'string)
@@ -17,7 +17,6 @@
 
 (add-to-list 'lsp-language-id-configuration '(mos-mode . "mos"))
 
-;; wtf.. server not present on path.. I give you the whole thing :rofl: any way we can just do that for now? 
 (lsp-register-client
  (make-lsp-client
   :new-connection (lsp-stdio-connection (lambda () (list lsp-mos-executable-path "lsp")))
@@ -26,8 +25,8 @@
   :priority -1
   :server-id 'mos-ls))
 
-;; TODO: debug config. is the defaultattach types here?
-;; seems like the default one is 6503
+;; TODO: possibility to download mos automatically if not found?
+
 (defun lsp-mos-populate-debug-args (conf)
   (-> conf
       (dap--put-if-absent :type "mos")
@@ -37,14 +36,17 @@
 
 (dap-register-debug-provider "mos" #'lsp-mos-populate-debug-args)
 
-;; todo: when running compile mode stuff. Just locate the folder with a mos.toml?
-;; (defun mos-build ()
-;;   (interactive)
-;;   ())
+;; todo: dry!
+(defun mos-build ()
+  (interactive)
+  (let ((default-directory (locate-dominating-file default-directory "mos.toml")))
+    (compile (string-join (list lsp-mos-executable-path " build")))))
 
-;; TODO: possibility to download mos automatically if not found?
+(defun mos-run-all-tests ()
+  (interactive)
+  (let ((default-directory (locate-dominating-file default-directory "mos.toml")))
+    (compile (string-join (list lsp-mos-executable-path " test")))))
 
-;; TODO: build project using simple shell task. Just compile mode? 
 
 ;; TODO: run/debug single test at point? when we hover the name?
 
