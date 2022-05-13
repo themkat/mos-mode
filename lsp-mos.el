@@ -12,6 +12,12 @@
   :group 'lsp-mos
   :type 'string)
 
+;; TODO: better names for this and the above?
+(defcustom lsp-mos-vice-executable-path (executable-find "x64sc")
+  "Path to the VICE executable (either x64 or x64sc)"
+  :group 'lsp-mos
+  :type 'string)
+
 ;; simple major mode based on assembly mode that can be activated
 (define-derived-mode mos-mode
   asm-mode "MOS mode"
@@ -30,6 +36,24 @@
   (interactive)
   (let ((default-directory (locate-dominating-file default-directory "mos.toml")))
     (compile (string-join (list lsp-mos-executable-path " test")))))
+
+(defun mos-run-program ()
+  (interactive)
+  ;; TODO: build. preLaunchTask is probably a vscode thing. 
+  (dap-debug (list :type "mos"
+                   :request "launch"
+                   :name "MOS Run program"
+                   :vicePath lsp-mos-vice-executable-path
+                   :noDebug t)))
+
+(defun mos-debug-program ()
+  (interactive)
+  ;; TODO: build. preLaunchTask is probably a vscode thing. 
+  (dap-debug (list :type "mos"
+                   :request "launch"
+                   :name "MOS Debug program"
+                   :vicePath lsp-mos-vice-executable-path
+                   :noDebug nil)))
 
 (defun mos-debug-test (no-debug)
   `(lambda (arguments)
