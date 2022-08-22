@@ -1,4 +1,4 @@
-;;; mos-mode.el --- MOS toolkit usage in Emacs
+;;; mos-mode.el --- MOS toolkit usage in Emacs -*- lexical-binding: t; -*-
 
 ;; URL: https://github.com/themkat/mos-mode
 ;; Version: 0.0.1
@@ -45,7 +45,7 @@
 ;; simple major mode based on assembly mode that can be activated
 (define-derived-mode mos-mode
   asm-mode "MOS mode"
-  "Major mode for use with the MOS toolkit for 6502 processors")
+  "Major mode for use with the MOS toolkit for 6502 processors.")
 
 (add-to-list 'lsp-language-id-configuration '(mos-mode . "mos"))
 (add-to-list 'mos-mode-hook #'lsp)
@@ -57,7 +57,7 @@
     (compile (string-join (list mos-executable-path " build")))))
 
 (defun mos-run-all-tests ()
-  "Run all tests in project."
+  "Run all the tests in project."
   (interactive)
   (let ((default-directory (locate-dominating-file default-directory "mos.toml")))
     (compile (string-join (list mos-executable-path " test")))))
@@ -83,6 +83,8 @@
                    :noDebug nil)))
 
 (defun mos-debug-test (no-debug)
+  "Debug helper function to avoid repetition.
+NO-DEBUG denotes if it should be a regular session or a debug session."
   `(lambda (arguments)
      (-let [(&hash "arguments" [test-name]) arguments]
        (dap-debug (list :type "mos"
@@ -134,7 +136,8 @@
   ))
 
 (defun mos-mode-populate-debug-args (conf)
-  "Populate default settings for debug adapter."
+  "Populate default settings for debug adapter.
+CONF is the current configuration sent by `dap-mode` functions."
   (-> conf
       (dap--put-if-absent :type "mos")
       (dap--put-if-absent :request "launch")
