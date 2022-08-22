@@ -1,4 +1,4 @@
-# lsp-mos
+# mos-mode - Emacs mode for working with MOS 6502
 Emacs support for [mos](https://github.com/datatrash/mos) using lsp-mode and dap-mode (as well as some utility functions).
 
 
@@ -12,9 +12,9 @@ You should have the follow programs installed:
 
 
 ## Usage
-If mos is in your path, you should be able to use this package right out of the box. If not, you need to configure `lsp-mos-executable-path` to point to the location of the mos executable. 
+If mos is in your path, you should be able to use this package right out of the box. If not, you need to configure `mos-executable-path` to point to the location of the mos executable. 
 
-If you want to debug Commodore programs using VICE, you also need to configure `lsp-mos-vice-executable-path` if x64sc is not in your path (you can also use x64). 
+If you want to debug Commodore programs using VICE, you also need to configure `mos-vice-executable-path` if x64sc is not in your path (you can also use x64). 
 
 
 To use the extension, you simply activate `mos-mode` in an assembly language buffer. Works like any other Emacs extension using lsp-mode and dap-mode (`dap-breakpoint-toggle` to toggle breakpoints etc.). So far only code lenses are used to run/debug the programs, but utility functions for doing it without those will also be available shortly. 

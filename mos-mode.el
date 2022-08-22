@@ -32,13 +32,13 @@
 (require 's)
 (require 'ht)
 
-(defcustom mos-mode-executable-path (executable-find "mos")
+(defcustom mos-executable-path (executable-find "mos")
   "Path to the mos executable"
   :group 'mos-mode
   :type 'string)
 
 ;; TODO: better names for this and the above?
-(defcustom mos-mode-vice-executable-path (executable-find "x64sc")
+(defcustom mos-vice-executable-path (executable-find "x64sc")
   "Path to the VICE executable (either x64 or x64sc)"
   :group 'mos-mode
   :type 'string)
@@ -60,7 +60,7 @@
 (defun mos-run-all-tests ()
   (interactive)
   (let ((default-directory (locate-dominating-file default-directory "mos.toml")))
-    (compile (string-join (list mos-mode-executable-path " test")))))
+    (compile (string-join (list mos-executable-path " test")))))
 
 (defun mos-run-program ()
   (interactive)
@@ -68,7 +68,7 @@
   (dap-debug (list :type "mos"
                    :request "launch"
                    :name "MOS Run program"
-                   :vicePath mos-mode-vice-executable-path
+                   :vicePath mos-vice-executable-path
                    :noDebug t)))
 
 (defun mos-debug-program ()
@@ -77,7 +77,7 @@
   (dap-debug (list :type "mos"
                    :request "launch"
                    :name "MOS Debug program"
-                   :vicePath mos-mode-vice-executable-path
+                   :vicePath mos-vice-executable-path
                    :noDebug nil)))
 
 (defun mos-debug-test (no-debug)
@@ -119,7 +119,7 @@
 
 (lsp-register-client
  (make-lsp-client
-  :new-connection (lsp-stdio-connection (lambda () (list (or mos-mode-executable-path
+  :new-connection (lsp-stdio-connection (lambda () (list (or mos-executable-path
                                                         mos-lsp-download-path) "-v" "lsp")))
   :activation-fn (lsp-activate-on "mos")
   :major-modes '(mos-mode)
