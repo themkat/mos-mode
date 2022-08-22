@@ -37,7 +37,6 @@
   :group 'mos-mode
   :type 'string)
 
-;; TODO: better names for this and the above?
 (defcustom mos-vice-executable-path (executable-find "x64sc")
   "Path to the VICE executable (either x64 or x64sc)."
   :group 'mos-mode
@@ -51,7 +50,6 @@
 (add-to-list 'lsp-language-id-configuration '(mos-mode . "mos"))
 (add-to-list 'mos-mode-hook #'lsp)
 
-;; todo: dry!
 (defun mos-build ()
   "Build the current project."
   (interactive)
@@ -96,6 +94,7 @@
 
 
 ;; download if dependency not present
+;; TODO: FIX! NOT WORKING AT THE MOMENT!
 (defcustom mos-download-url
   (string-join (list "https://github.com/datatrash/mos/releases/download/0.7.5/mos-0.7.5-x86_64-"
                      (cond ((string-equal "darwin" system-type) "apple-darwin.tar.gz")
