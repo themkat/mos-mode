@@ -33,13 +33,13 @@
 (require 'ht)
 
 (defcustom mos-executable-path (executable-find "mos")
-  "Path to the mos executable"
+  "Path to the mos executable."
   :group 'mos-mode
   :type 'string)
 
 ;; TODO: better names for this and the above?
 (defcustom mos-vice-executable-path (executable-find "x64sc")
-  "Path to the VICE executable (either x64 or x64sc)"
+  "Path to the VICE executable (either x64 or x64sc)."
   :group 'mos-mode
   :type 'string)
 
@@ -53,18 +53,21 @@
 
 ;; todo: dry!
 (defun mos-build ()
+  "Build the current project."
   (interactive)
   (let ((default-directory (locate-dominating-file default-directory "mos.toml")))
-    (compile (string-join (list mos-mode-executable-path " build")))))
+    (compile (string-join (list mos-executable-path " build")))))
 
 (defun mos-run-all-tests ()
+  "Run all tests in project."
   (interactive)
   (let ((default-directory (locate-dominating-file default-directory "mos.toml")))
     (compile (string-join (list mos-executable-path " test")))))
 
 (defun mos-run-program ()
+  "Run the current program/source file."
   (interactive)
-  ;; TODO: build. preLaunchTask is probably a vscode thing. 
+  ;; TODO: build. preLaunchTask is probably a vscode thing.
   (dap-debug (list :type "mos"
                    :request "launch"
                    :name "MOS Run program"
@@ -72,8 +75,9 @@
                    :noDebug t)))
 
 (defun mos-debug-program ()
+  "Debug the current program/source file."
   (interactive)
-  ;; TODO: build. preLaunchTask is probably a vscode thing. 
+  ;; TODO: build. preLaunchTask is probably a vscode thing.
   (dap-debug (list :type "mos"
                    :request "launch"
                    :name "MOS Debug program"
@@ -131,6 +135,7 @@
                         (lsp-package-ensure 'mos callback error-callback))))
 
 (defun mos-mode-populate-debug-args (conf)
+  "Populate default settings for debug adapter."
   (-> conf
       (dap--put-if-absent :type "mos")
       (dap--put-if-absent :request "launch")
