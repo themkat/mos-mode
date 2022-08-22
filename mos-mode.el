@@ -122,7 +122,7 @@
 
 (lsp-register-client
  (make-lsp-client
-  :new-connection (lsp-stdio-connection (lambda () (list (or mos-executable-path "-v" "lsp")))
+  :new-connection (lsp-stdio-connection (lambda () (list mos-executable-path "-v" "lsp")))
   :activation-fn (lsp-activate-on "mos")
   :major-modes '(mos-mode)
   :priority -1
@@ -130,7 +130,7 @@
   :action-handlers (ht ("mos.runSingleTest" (mos-debug-test t))
                        ("mos.debugSingleTest" (mos-debug-test nil)))
   ;; :download-server-fn (lambda (_client callback error-callback _update?)
-  ;;                       (lsp-package-ensure 'mos callback error-callback))
+  ;;                       (lsp-package-ensure 'mos callback error-callback)
   ))
 
 (defun mos-mode-populate-debug-args (conf)
