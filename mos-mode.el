@@ -95,43 +95,43 @@
 
 ;; download if dependency not present
 ;; TODO: FIX! NOT WORKING AT THE MOMENT!
-(defcustom mos-download-url
-  (string-join (list "https://github.com/datatrash/mos/releases/download/0.7.5/mos-0.7.5-x86_64-"
-                     (cond ((string-equal "darwin" system-type) "apple-darwin.tar.gz")
-                     ((string-equal "gnu/linux" system-type) "unknown-linux-musl.tar.gz")
-                     ((string-equal "windows-nt" system-type) "pc-windows-msvc.zip"))))
+;; (defcustom mos-download-url
+;;   (string-join (list "https://github.com/datatrash/mos/releases/download/0.7.5/mos-0.7.5-x86_64-"
+;;                      (cond ((string-equal "darwin" system-type) "apple-darwin.tar.gz")
+;;                      ((string-equal "gnu/linux" system-type) "unknown-linux-musl.tar.gz")
+;;                      ((string-equal "windows-nt" system-type) "pc-windows-msvc.zip"))))
   
-  "Download URL for the mos executable"
-  :group 'mos-mode
-  :type 'string)
+;;   "Download URL for the mos executable"
+;;   :group 'mos-mode
+;;   :type 'string)
 
-(defvar mos-lsp-download-path (f-join lsp-server-install-dir "mos" "mos"))
+;; (defvar mos-lsp-download-path (f-join lsp-server-install-dir "mos" "mos"))
 
-(lsp-dependency
- 'mos
- (list :system mos-lsp-download-path)
- (list :download
-       :url mos-download-url
-       ;; TODO: should there be a way to unpack tar.gz in lsp-mode? maybe make a pr for that instead fo hacky shit here...
-       :decompress (if (string-equal "windows-nt" system-type) :zip :tgz)
-       :store-path (f-join lsp-server-install-dir
-                           "mos"
-                           "mos")
-       :binary-path mos-lsp-download-path
-       :set-executable? t))
+;; (lsp-dependency
+;;  'mos
+;;  (list :system mos-lsp-download-path)
+;;  (list :download
+;;        :url mos-download-url
+;;        ;; TODO: should there be a way to unpack tar.gz in lsp-mode? maybe make a pr for that instead fo hacky shit here...
+;;        :decompress (if (string-equal "windows-nt" system-type) :zip :tgz)
+;;        :store-path (f-join lsp-server-install-dir
+;;                            "mos"
+;;                            "mos")
+;;        :binary-path mos-lsp-download-path
+;;        :set-executable? t))
 
 (lsp-register-client
  (make-lsp-client
-  :new-connection (lsp-stdio-connection (lambda () (list (or mos-executable-path
-                                                        mos-lsp-download-path) "-v" "lsp")))
+  :new-connection (lsp-stdio-connection (lambda () (list (or mos-executable-path "-v" "lsp")))
   :activation-fn (lsp-activate-on "mos")
   :major-modes '(mos-mode)
   :priority -1
   :server-id 'mos-ls
   :action-handlers (ht ("mos.runSingleTest" (mos-debug-test t))
                        ("mos.debugSingleTest" (mos-debug-test nil)))
-  :download-server-fn (lambda (_client callback error-callback _update?)
-                        (lsp-package-ensure 'mos callback error-callback))))
+  ;; :download-server-fn (lambda (_client callback error-callback _update?)
+  ;;                       (lsp-package-ensure 'mos callback error-callback))
+  ))
 
 (defun mos-mode-populate-debug-args (conf)
   "Populate default settings for debug adapter."
