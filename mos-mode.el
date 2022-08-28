@@ -1,8 +1,8 @@
-;;; mos-mode.el --- MOS toolkit usage in Emacs -*- lexical-binding: t; -*-
+;;; mos-mode.el --- MOS toolkit usage -*- lexical-binding: t; -*-
 
 ;; URL: https://github.com/themkat/mos-mode
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "24.4") (lsp-mode "8.0.0") (dap-mode "0.7") (dash "2.19.1") (s "1.12.0") (ht "2.3"))
+;; Package-Requires: ((emacs "24.4") (lsp-mode "8.0.0") (dap-mode "0.7") (dash "2.19.1") (ht "2.3"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@
 (require 'lsp-mode)
 (require 'dap-mode)
 (require 'dash)
-(require 's)
 (require 'ht)
 
 (defcustom mos-executable-path (executable-find "mos")
