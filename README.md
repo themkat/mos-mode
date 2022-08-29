@@ -1,3 +1,4 @@
+[![MELPA](https://melpa.org/packages/mos-mode-badge.svg)](https://melpa.org/#/mos-mode)
 # mos-mode - Emacs mode for working with MOS 6502
 Emacs support for [mos](https://github.com/datatrash/mos) using lsp-mode and dap-mode (as well as some utility functions).
 
