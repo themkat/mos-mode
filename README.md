@@ -12,6 +12,29 @@ You should have the follow programs installed:
 - [Vice](https://vice-emu.sourceforge.io/) (needed if you want to debug your Commodore machine programs)
 
 
+## Installation
+### Melpa
+The easiest way is to install through [Melpa](https://melpa.org/#/getting-started). Using package-install, you can do it like this interactively:
+
+```
+M-x package-install RET mos-mode
+```
+
+Or in your config file:
+```emacs-lisp
+(package-install 'mos-mode)
+```
+
+The package can also be installed and configured using use-package: `(use-package mos-mode)` (add the `:load-path` option to install it from local source).
+
+
+### From source
+Clone this repo locally, add the path to the load path and require mos-mode:
+```emacs-lisp
+(add-to-list 'load-path "/path/to/mos-mode")
+(require 'mos-mode)
+```
+
 ## Usage
 If mos is in your path, you should be able to use this package right out of the box. If not, you need to configure `mos-executable-path` to point to the location of the mos executable. 
 
