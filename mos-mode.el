@@ -49,6 +49,10 @@
 ;; font lock to get proper syntax highlighting
 (defconst mos-font-lock-keywords
   (list
+   ;; labels
+   (cons "[a-zA-Z0-9_]+\\:" 'font-lock-function-name-face)
+   ;; macro invocation
+   (cons "[a-zA-Z0-9_]+(.*)" 'font-lock-function-name-face)
    ;; mnemonics/asm opcodes
    (cons "[ ]+\\(adc\\|and\\|asl\\|bcc\\|bcs\\|beq\\|bit\\|bmi\\|bne\\|bpl\\|brk\\|bvc\\|bvs\\|clc\\|cld\\|cli\\|clv\\|cmp\\|cpx\\|cpy\\|dec\\|dex\\|dey\\|eor\\|inc\\|inx\\|iny\\|jmp\\|jsr\\|lda\\|ldx\\|ldy\\|lsr\\|nop\\|ora\\|pha\\|php\\|pla\\|plp\\|rol\\|ror\\|rti\\|rts\\|sbc\\|sec\\|sed\\|sei\\|sta\\|stx\\|sty\\|tax\\|tay\\|tsx\\|txa\\|txs\\|tya\\)"
          'font-lock-keyword-face)
@@ -56,8 +60,6 @@
    (cons (regexp-opt '(".const" ".var" ".byte" ".word" ".dword" ".macro" ".define" ".segment" ".loop" ".align" ".if" "else" "as" ".import" "from" ".text" "ascii" "petscii" "petscreen" ".file" ".assert" ".trace" ".test")
                      t)
          'font-lock-builtin-face)
-   ;; labels
-   (cons "\\w+\\:" 'font-lock-function-name-face)
    ;; hexadecimals
    (cons "#?\\$[0-9A-Fa-f]+" 'font-lock-constant-face)
    ;; binary numbers
