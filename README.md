@@ -48,3 +48,7 @@ Interactive functions available:
 - `mos-build`: Build the program (based on mos.toml settings)
 - `mos-run-all-tests`: Run all the unit tests in the project (depends on presense of mos.toml)
 - `mos-run-program` / `mos-debug-program`: Run or debug the program.
+
+
+By default mos-mode will format the buffer when saving. You can toggle this behavior with `mos-format-on-save` (e.g, set it to nil to not format on save)
+
