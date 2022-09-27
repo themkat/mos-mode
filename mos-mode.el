@@ -41,6 +41,11 @@
   :group 'mos-mode
   :type 'string)
 
+(defcustom mos-format-on-save t
+  "Whether to format the buffer when saving or not"
+  :group 'mos-mode
+  :type 'boolean)
+
 ;; font lock to get proper syntax highlighting
 (defconst mos-font-lock-keywords
   (list
@@ -62,12 +67,73 @@
    ;; comments
    (cons "/\\*.*\\*/" 'font-lock-comment-face)
    (cons "//.*$" 'font-lock-comment-face))
-  "Highlighting rules for MOS, mostly 6502 assembly syntax with some special built-ins on top")
+  "Highlighting rules for MOS, mostly 6502 assembly syntax with some special built-ins on top.")
+
+(defun mos--jump-to-prev-non-empty-line ()
+  "Jumps to first non-empty line, or the beginning of the buffer. Used for indentation."
+  (forward-line -1)
+  (back-to-indentation)
+  (when (and (not (bobp))
+             (looking-at "^[[:blank:]]*$"))
+    (mos--jump-to-prev-non-empty-line)))
+
+(defconst mos--regex-label-pattern "[[:blank:]]*[a-zA-Z0-9]+:"
+  "Pattern to check if something is an assembly label.")
+
+(defun mos-indent-line ()
+  "Indent the current line."
+  (beginning-of-line)
+  (let (prev-indent
+        inside-block
+        is-prev-label
+        (prev-line-label-length -1))
+    ;; get the previous non empty lines indentation level
+    (save-excursion
+      (mos--jump-to-prev-non-empty-line)
+      (setq prev-indent (current-indentation))
+      (setq inside-block (looking-at ".*{"))
+      (setq is-prev-label (looking-at mos--regex-label-pattern))
+      (when is-prev-label
+        (let* ((curr-line (thing-at-point 'line))
+               (label-text (match-string (string-match mos--regex-label-pattern
+                                                       curr-line)
+                                         curr-line)))
+          (setq prev-line-label-length (length (string-trim label-text))))))
+
+    ;; actual indentation logic (probably super simple)
+    ;; (first time I ever had to create an indent function)
+    (cond ((bobp) (indent-line-to 20))
+          (inside-block
+           (indent-line-to (+ prev-indent 4)))
+          ((looking-at "^.*}")
+           (indent-line-to (- prev-indent 4)))
+          ((looking-at mos--regex-label-pattern)
+           ;; we are at the line of a label, so we need to get the labels length
+           (let* ((curr-line (thing-at-point 'line))
+                  (label-text (match-string (string-match mos--regex-label-pattern
+                                                          curr-line)
+                                            curr-line))
+                  (label-length (length (string-trim label-text))))
+             (indent-line-to (- prev-indent label-length 1))))
+          (is-prev-label
+           ;; Opposite of the "current line is label" calculation
+           (indent-line-to (+ prev-indent prev-line-label-length 1)))
+          (t
+           (indent-line-to prev-indent)))))
+
+;; Function to control whether we format on save
+(defun mos-format-on-save-fun ()
+  "Format on save given that the variable mos-format-on-save is true"
+  (when mos-format-on-save
+    (lsp-format-buffer)))
+
 ;; simple major mode based on assembly mode that can be activated
 (define-derived-mode mos-mode
   fundamental-mode "MOS mode"
   "Major mode for use with the MOS toolkit for 6502 processors."
-  (setq font-lock-defaults '(mos-font-lock-keywords nil t)))
+  (setq font-lock-defaults '(mos-font-lock-keywords nil t))
+  (setq indent-line-function 'mos-indent-line)
+  (add-hook 'after-save-hook 'mos-format-on-save-fun nil t))
 
 (add-to-list 'lsp-language-id-configuration '(mos-mode . "mos"))
 (add-to-list 'mos-mode-hook #'lsp)
