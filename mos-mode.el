@@ -79,7 +79,7 @@
              (looking-at "^[[:blank:]]*$"))
     (mos--jump-to-prev-non-empty-line)))
 
-(defconst mos--regex-label-pattern "[[:blank:]]*[a-zA-Z0-9]+:"
+(defconst mos--regex-label-pattern "[[:blank:]]*[a-zA-Z0-9_]+:"
   "Pattern to check if something is an assembly label.")
 
 (defun mos-indent-line ()
