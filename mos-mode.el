@@ -41,10 +41,33 @@
   :group 'mos-mode
   :type 'string)
 
+;; font lock to get proper syntax highlighting
+(defconst mos-font-lock-keywords
+  (list
+   ;; mnemonics/asm opcodes
+   (cons "[ ]+\\(adc\\|and\\|asl\\|bcc\\|bcs\\|beq\\|bit\\|bmi\\|bne\\|bpl\\|brk\\|bvc\\|bvs\\|clc\\|cld\\|cli\\|clv\\|cmp\\|cpx\\|cpy\\|dec\\|dex\\|dey\\|eor\\|inc\\|inx\\|iny\\|jmp\\|jsr\\|lda\\|ldx\\|ldy\\|lsr\\|nop\\|ora\\|pha\\|php\\|pla\\|plp\\|rol\\|ror\\|rti\\|rts\\|sbc\\|sec\\|sed\\|sei\\|sta\\|stx\\|sty\\|tax\\|tay\\|tsx\\|txa\\|txs\\|tya\\)"
+         'font-lock-keyword-face)
+   ;; mos builtins
+   (cons (regexp-opt '(".const" ".var" ".byte" ".word" ".dword" ".macro" ".define" ".segment" ".loop" ".align" ".if" "else" "as" ".import" "from" ".text" "ascii" "petscii" "petscreen" ".file" ".assert" ".trace" ".test")
+                     t)
+         'font-lock-builtin-face)
+   ;; labels
+   (cons "\\w+\\:" 'font-lock-function-name-face)
+   ;; hexadecimals
+   (cons "#?\\$[0-9A-Fa-f]+" 'font-lock-constant-face)
+   ;; binary numbers
+   (cons "#?\\%[0-1]+" 'font-lock-constant-face)
+   ;; decimals
+   (cons "#?[0-9]+" 'font-lock-constant-face)
+   ;; comments
+   (cons "/\\*.*\\*/" 'font-lock-comment-face)
+   (cons "//.*$" 'font-lock-comment-face))
+  "Highlighting rules for MOS, mostly 6502 assembly syntax with some special built-ins on top")
 ;; simple major mode based on assembly mode that can be activated
 (define-derived-mode mos-mode
-  asm-mode "MOS mode"
-  "Major mode for use with the MOS toolkit for 6502 processors.")
+  fundamental-mode "MOS mode"
+  "Major mode for use with the MOS toolkit for 6502 processors."
+  (setq font-lock-defaults '(mos-font-lock-keywords nil t)))
 
 (add-to-list 'lsp-language-id-configuration '(mos-mode . "mos"))
 (add-to-list 'mos-mode-hook #'lsp)
