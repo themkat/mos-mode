@@ -52,3 +52,5 @@ Interactive functions available:
 
 By default mos-mode will format the buffer when saving. You can toggle this behavior with `mos-format-on-save` (e.g, set it to nil to not format on save)
 
+
+[The MOS documentation](https://mos.datatra.sh/guide/ide/vscode.html#building-and-launching) also have other useful information, like the format of expressions and variables in the set-variables operation during debugging.
