@@ -49,6 +49,9 @@
 ;; font lock to get proper syntax highlighting
 (defconst mos-font-lock-keywords
   (list
+   ;; comments
+   (cons "/\\*.*\\*/" 'font-lock-comment-face)
+   (cons "//.*$" 'font-lock-comment-face)
    ;; labels
    (cons "[a-zA-Z0-9_]+\\:" 'font-lock-function-name-face)
    ;; macro invocation
@@ -65,10 +68,7 @@
    ;; binary numbers
    (cons "#?\\%[0-1]+" 'font-lock-constant-face)
    ;; decimals
-   (cons "#?[0-9]+" 'font-lock-constant-face)
-   ;; comments
-   (cons "/\\*.*\\*/" 'font-lock-comment-face)
-   (cons "//.*$" 'font-lock-comment-face))
+   (cons "#?[0-9]+" 'font-lock-constant-face))
   "Highlighting rules for MOS, mostly 6502 assembly syntax with some special built-ins on top.")
 
 (defun mos--jump-to-prev-non-empty-line ()
