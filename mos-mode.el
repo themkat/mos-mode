@@ -130,6 +130,7 @@
     (lsp-format-buffer)))
 
 ;; simple major mode based on assembly mode that can be activated
+;;;###autoload
 (define-derived-mode mos-mode
   fundamental-mode "MOS mode"
   "Major mode for use with the MOS toolkit for 6502 processors."
