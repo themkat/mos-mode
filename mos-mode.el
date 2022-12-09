@@ -38,7 +38,7 @@
 
 ;; auto download related
 (defcustom mos-download-url
-  (format "https://github.com/datatrash/mos/releases/latest/download/%s"
+  (format "https://github.com/datatrash/mos/releases/download/0.8.2/%s"
           (pcase system-type
             ('gnu/linux "mos-0.8.2-x86_64-unknown-linux-musl.tar.gz")
             ('darwin "mos-0.8.2-x86_64-apple-darwin.tar.gz")
